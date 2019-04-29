@@ -8,6 +8,21 @@
     <StackLayout>
         <!-- Place new controls here -->
         <Button Text="Calendar" Clicked="Button_Clicked" />
+            <Label Text="Deadlines:" TextColor="Black"/>
+        <ListView x:Name="DeadlinesListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Label Grid.Column="1" Text="{Binding name}"/>
+                            <Label Grid.Column="2" Text="{Binding description}"/>
+                            <Label Grid.Column="3" Text="{Binding date}"/>
+                        </Grid>
+                    </ViewCell>
+                    <!--<TextCell Text="{Binding wholeDL}"/>-->
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Label Text="Welcome to Xamarin.Forms!" 
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
