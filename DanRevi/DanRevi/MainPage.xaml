@@ -7,25 +7,49 @@
 
     <StackLayout>
         <!-- Place new controls here -->
-        <Button Text="Calendar" Clicked="Button_Clicked" />
-            <Label Text="Deadlines:" TextColor="Black"/>
+        <Button Text="Calendar" Clicked="Button_Clicked" BorderWidth="2" BackgroundColor="LightGreen" BorderColor="DarkGreen" TextColor="DarkGreen"/>
+        
+        <Label Text="Deadlines:" TextColor="Black" FontAttributes="Bold" FontSize="Large"/>
         <ListView x:Name="DeadlinesListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <Grid>
-                            <Label Grid.Column="1" Text="{Binding name}"/>
-                            <Label Grid.Column="2" Text="{Binding description}"/>
-                            <Label Grid.Column="3" Text="{Binding date}"/>
+                            <Label Text="{Binding name}" TextColor="Black" HorizontalTextAlignment="Start"/>
+                            <Label Grid.Column="1" Text="{Binding description}" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2" Text="{Binding date, StringFormat='{0:dd-MMM-yy}'}" TextColor="LightGray" HorizontalTextAlignment="End"/>
                         </Grid>
                     </ViewCell>
                     <!--<TextCell Text="{Binding wholeDL}"/>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Label Text="Welcome to Xamarin.Forms!" 
+
+        <Label Text="Kurser:" TextColor="Black" FontAttributes="Bold" FontSize="Large"/>
+        <ListView x:Name="CoursesListView">
+            <ListView.Header>
+                <Grid>
+                    <Label Grid.Column="2" Text="Start" TextColor="Black" FontAttributes="Bold"/>
+                    <Label Grid.Column="3" Text="Slut" TextColor="Black" FontAttributes="Bold" />
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Label Text="{Binding name}" TextColor="Black" HorizontalTextAlignment="Start"/>
+                            <Label Grid.Column="1" Text="{Binding description}" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2" Text="{Binding start, StringFormat='{0:dd-MMM-yy}'}" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="3" Text="{Binding end, StringFormat='{0:dd-MMM-yy}'}" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!--<Label Text="Welcome to Xamarin.Forms!" 
            HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+           VerticalOptions="CenterAndExpand" />-->
         
     </StackLayout>
 
