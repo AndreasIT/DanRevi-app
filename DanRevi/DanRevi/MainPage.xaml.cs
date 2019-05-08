@@ -14,10 +14,10 @@ namespace DanRevi
     {
         private readonly HttpClient _client = new HttpClient(); //Creating a new instance of HttpClient. (Microsoft.Net.Http)
         //Deadlines
-        private const string UrlDL = "http://danrevi-api.azurewebsites.net/api/deadlines"; //The link for Daniels API
+        private const string UrlDL = "http://danrevi.stuhrs.dk/api/deadlines"; //The link for Daniels API
         private ObservableCollection<Deadlines> _deadlines; //Refreshing the state of the UI in realtime when updating the ListView's Collection
         //Courses
-        private const string UrlC = "http://danrevi-api.azurewebsites.net/api/courses"; //The link for Daniels API
+        private const string UrlC = "http://danrevi.stuhrs.dk/api/courses"; //The link for Daniels API
         private ObservableCollection<Courses> _courses; //Refreshing the state of the UI in realtime when updating the ListView's Collection
 
         /// <summary>

@@ -15,7 +15,9 @@ namespace DanRevi
     {
         private readonly HttpClient _client = new HttpClient(); //Creating a new instance of HttpClient. (Microsoft.Net.Http)
         //Deadlines
-        private const string UrlDL = "http://danrevi-api.azurewebsites.net/api/deadlines"; //The link for Daniels API
+        private const string UrlDL = "http://danrevi.stuhrs.dk/api/deadlines"; //The link for Daniels API
+
+
 
         protected override async void OnAppearing()
         {
@@ -64,7 +66,6 @@ namespace DanRevi
 
         private async void Calendar_DateClicked(object sender, DateTimeEventArgs e)
         {
-            
             await Navigation.PushAsync(new SelectedDate(e));
         }
     }
