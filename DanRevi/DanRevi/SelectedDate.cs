@@ -25,17 +25,30 @@ namespace DanRevi
 
         }
 
+        private ObservableCollection<Courses> GetCoursesByDate(DateTime date)
+        {
+
+            string UrlC = $"http://danrevi.stuhrs.dk/api/courses/date/{date.ToString("yyyy-MM-dd")}"; //The link for Daniels API
+            string content = _client.GetStringAsync(UrlC).Result; //Sends a GET request to the specified Uri and returns the response body as a string in an asynchronous operation
+            List<Courses> courses = JsonConvert.DeserializeObject<List<Courses>>(content); //Deserializes or converts JSON String into a collection of Courses
+            return new ObservableCollection<Courses>(courses); //Converting the List to ObservalbleCollection of Courses
+
+        }
+
         BoxView outerBox;
         BoxView innerBox;
         Label labelDay;
         Label labelMonth;
         Label labelYear;
-        ListView LV_thisDay;
+        ListView LV_Deadlines;
+        ListView LV_Courses;
+
 
         public SelectedDate (DateTimeEventArgs e)
 		{
             AbsoluteLayout outerLayout = new AbsoluteLayout();
             RelativeLayout dateLayout = new RelativeLayout();
+            StackLayout listLayout = new StackLayout();
 
             //content = new stacklayout {
             //	children = { new label {
@@ -48,45 +61,44 @@ namespace DanRevi
             labelDay = new Label {Text = e.DateTime.Day + ".", FontSize = 24 };
             labelMonth = new Label { Text = wholeDate.ToString("MMMM"), FontSize = 11 };
             labelYear = new Label { Text = e.DateTime.Year.ToString(), FontSize = 6 };
-            LV_thisDay = new ListView
-            {
-                ItemsSource = GetDeadlinesByDate(e.DateTime),
-                ItemTemplate = new DataTemplate(()=> 
-                {
-                    Label deadlineName = new Label();
-                    deadlineName.SetBinding(Label.TextProperty,
-                        new Binding("name"));
+            //------------ListView--------------------------
 
-                    BoxView boxView = new BoxView();
-                    boxView.SetBinding(BoxView.ColorProperty, "FavoriteColor");
+            
 
-                    // Return an assembled ViewCell.
-                    return new ViewCell
-                    {
-                        View = new StackLayout
-                        {
-                            Padding = new Thickness(0, 5),
-                            Orientation = StackOrientation.Horizontal,
-                            Children =
-                                {
-                                    boxView,
-                                    new StackLayout
-                                    {
-                                        VerticalOptions = LayoutOptions.Center,
-                                        Spacing = 0,
-                                        Children =
-                                        {
-                                            deadlineName
-                                        }
-                                        }
-                                }
-                        }
-                    };
-                }),
-                BackgroundColor = Color.LightSkyBlue,
-                HeightRequest = 75, WidthRequest = 400
-            };
 
+            
+
+            //LV_Courses = new ListView
+            //{
+            //    ItemsSource = GetCoursesByDate(e.DateTime),
+            //    ItemTemplate = new DataTemplate(() =>
+            //    {
+            //        Label courseName = new Label();
+            //        courseName.SetBinding(Label.TextProperty,
+            //            new Binding("name"));
+
+                    
+
+            //        // Return an assembled ViewCell.
+            //        return new ViewCell
+            //        {
+                        
+            //            View = new StackLayout
+            //            {
+            //                Padding = new Thickness(0, 5),
+            //                Orientation = StackOrientation.Horizontal,
+            //                Children =
+            //                {
+            //                       courseName
+            //                }
+            //            }
+            //        };
+            //    }),
+            //    BackgroundColor = Color.LightGreen,
+            //    HeightRequest = 75,
+            //    WidthRequest = 400
+            //};
+            //------------------ListView-------------------
 
             dateLayout.Children.Add(outerBox, Constraint.RelativeToParent((parent) => {
                 return parent.X + 90;
@@ -144,17 +156,81 @@ namespace DanRevi
             //})
             );
 
-            dateLayout.Children.Add(LV_thisDay, Constraint.RelativeToParent((parent) => {
-                return parent.X + 10;
-            }), Constraint.RelativeToParent((parent) => {
-                return parent.Y + 100;
-            }), Constraint.RelativeToParent((parent) => {
-                return (parent.Width * .9);
-            }), Constraint.RelativeToParent((parent) => {
-                return (parent.Height * .5);
-            }));
+            //dateLayout.Children.Add(LV_Deadlines, Constraint.RelativeToParent((parent) =>
+            //{
+            //    return parent.X + 10;
+            //}), Constraint.RelativeToParent((parent) =>
+            //{
+            //    return parent.Y + 100;
+            //}), Constraint.RelativeToParent((parent) =>
+            //{
+            //    return (parent.Width * .9);
+            //}), Constraint.RelativeToParent((parent) =>
+            //{
+            //    return (parent.Height * .5);
+            //}));
+
+            //dateLayout.Children.Add(LV_Courses, Constraint.RelativeToView(LV_Deadlines, (parent, sibling) => {
+            //    return sibling.X + 5;
+            //}), Constraint.RelativeToView(LV_Deadlines, (parent, sibling) => {
+            //    return sibling.Y + 50;
+            //}), Constraint.RelativeToParent((parent) => {
+            //    return (parent.Width * .9);
+            //}), Constraint.RelativeToParent((parent) => {
+            //    return (parent.Height * .5);
+            //}));
+
+
+            //flyt begge list views ned hvor jeg tilføjer dem til stacklayoutet. Defter skal jeg placere dem i disse if statements.
+            //Altså så den kun køre de 2 listviews hvis der retuneres noget/ der er mere end 1 ting i collection.
+            //if (GetDeadlinesByDate(e.DateTime) == null)
+            //{
+            //    return;
+            //}
+            if (GetDeadlinesByDate(e.DateTime).Count != 0)
+            {
+                LV_Deadlines = new ListView
+                {
+                    ItemsSource = GetDeadlinesByDate(e.DateTime),
+
+                    ItemTemplate = new DataTemplate(() =>
+                    {
+                        Label deadlineName = new Label();
+                        deadlineName.SetBinding(Label.TextProperty,
+                            new Binding("name"));
+
+
+
+                        // Return an assembled ViewCell.
+                        return new ViewCell
+                        {
+                            View = new StackLayout
+                            {
+                                Padding = new Thickness(0, 5),
+                                Orientation = StackOrientation.Horizontal,
+                                Children =
+                            {
+                                    deadlineName
+                            }
+                            }
+                        };
+                    }),
+                    BackgroundColor = Color.LightSkyBlue,
+                    HeightRequest = 75,
+                    WidthRequest = 400
+                };
+                listLayout.Children.Add(LV_Deadlines);
+            }
+            else
+            {
+                listLayout.Children.Add(new Label { Text = "No deadlines" });
+                    }
+
+            
+            //listLayout.Children.Add(LV_Courses);
 
             outerLayout.Children.Add(dateLayout, new Rectangle(0, 0, 1, 1), AbsoluteLayoutFlags.All);
+            outerLayout.Children.Add(listLayout);
 
             this.Content = outerLayout;
         }

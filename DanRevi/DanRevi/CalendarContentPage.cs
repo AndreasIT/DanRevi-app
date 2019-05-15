@@ -16,7 +16,8 @@ namespace DanRevi
         private readonly HttpClient _client = new HttpClient(); //Creating a new instance of HttpClient. (Microsoft.Net.Http)
         //Deadlines
         private const string UrlDL = "http://danrevi.stuhrs.dk/api/deadlines"; //The link for Daniels API
-
+                                                                               //Courses
+        private const string UrlC = "http://danrevi.stuhrs.dk/api/courses"; //The link for Daniels API
 
 
         protected override async void OnAppearing()
@@ -40,8 +41,16 @@ namespace DanRevi
             calendar.WeekdaysTextColor = Color.Black;
 
             var deadlines = await GetDeadlines();
+            var courses = await GetCourses();
 
             calendar.SpecialDates = deadlines.Select(d => new SpecialDate(d.date) { BackgroundColor = Color.Blue, Selectable = true }).ToList();
+            calendar.SpecialDates.Add(new SpecialDate(DateTime.Now) { BackgroundColor = Color.Green, BorderColor = Color.Black, BorderWidth = 4, Selectable = true });
+
+            foreach (var item in courses.Select(d => new SpecialDate(d.start) { BackgroundColor = Color.Red, Selectable = true }).ToList())
+            {
+                calendar.SpecialDates.Add(item);
+            }
+
             calendar.SpecialDates.Add(new SpecialDate(DateTime.Now) { BackgroundColor = Color.Green, BorderColor = Color.Black, BorderWidth = 4, Selectable = true });
 
             panel.Children.Add(calendar);
@@ -64,9 +73,17 @@ namespace DanRevi
 
         }
 
+        private async Task<ObservableCollection<Courses>> GetCourses()
+        {
+            string content = await _client.GetStringAsync(UrlC); //Sends a GET request to the specified Uri and returns the response body as a string in an asynchronous operation
+            List<Courses> courses = JsonConvert.DeserializeObject<List<Courses>>(content); //Deserializes or converts JSON String into a collection of Deadlines
+            return new ObservableCollection<Courses>(courses); //Converting the List to ObservalbleCollection of Deadlines
+
+        }
+
         private async void Calendar_DateClicked(object sender, DateTimeEventArgs e)
         {
-            await Navigation.PushAsync(new SelectedDate(e));
+             await Navigation.PushAsync(new SelectedDate(e));
         }
     }
 }
