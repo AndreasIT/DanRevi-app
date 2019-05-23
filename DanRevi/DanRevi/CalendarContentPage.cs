@@ -16,7 +16,7 @@ namespace DanRevi
         private readonly HttpClient _client = new HttpClient(); //Creating a new instance of HttpClient. (Microsoft.Net.Http)
         //Deadlines
         private const string UrlDL = "http://danrevi.stuhrs.dk/api/deadlines"; //The link for Daniels API
-                                                                               //Courses
+        //Courses
         private const string UrlC = "http://danrevi.stuhrs.dk/api/courses"; //The link for Daniels API
 
 
