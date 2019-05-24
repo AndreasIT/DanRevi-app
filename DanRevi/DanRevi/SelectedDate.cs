@@ -14,19 +14,20 @@ namespace DanRevi
 	public class SelectedDate : ContentPage
 	{
          private readonly HttpClient _client = new HttpClient(); //Creating a new instance of HttpClient. (Microsoft.Net.Http)
-         private const string UrlDL = "http://danrevi.stuhrs.dk/api/deadlines";
-         private ObservableCollection<Deadlines> deadlines; //Refreshing the state of the UI in realtime when updating the ListView's Collection
+         
+         private const string UrlC = "http://danrevi.stuhrs.dk/api/courses";
+         private ObservableCollection<Courses> _courses; //Refreshing the state of the UI in realtime when updating the ListView's Collection
 
         private ObservableCollection<Deadlines> GetDeadlinesByDate(DateTime date)
         {
 
             string UrlDL = $"http://danrevi.stuhrs.dk/api/deadlines/date/{date.ToString("yyyy-MM-dd")}"; //The link for Daniels API
-            string content = _client.GetStringAsync(UrlDL).Result; //Sends a GET request to the specified Uri and returns the response body as a string in an asynchronous operation
+            string dl_content = _client.GetStringAsync(UrlDL).Result; //Sends a GET request to the specified Uri and returns the response body as a string in an synchronous operation
 
 
-            if (!content.Contains("message"))
+            if (!dl_content.Contains("message"))
             {
-                List<Deadlines> deadlines = JsonConvert.DeserializeObject<List<Deadlines>>(content); //Deserializes or converts JSON String into a collection of Deadlines
+                List<Deadlines> deadlines = JsonConvert.DeserializeObject<List<Deadlines>>(dl_content); //Deserializes or converts JSON String into a collection of Deadlines
                 return new ObservableCollection<Deadlines>(deadlines); //Converting the List to ObservalbleCollection of Deadlines
             }
             else
@@ -39,25 +40,26 @@ namespace DanRevi
         private ObservableCollection<Courses> GetCoursesByDate(DateTime date)
         {
 
-            string UrlC = $"http://danrevi.stuhrs.dk/api/courses/date/{date.ToString("yyyy-MM-dd")}"; //The link for Daniels API
-            string content = _client.GetStringAsync(UrlC).Result; //Sends a GET request to the specified Uri and returns the response body as a string in an asynchronous operation
+            string UrlCDate = $"http://danrevi.stuhrs.dk/api/courses/date/{date.ToString("yyyy-MM-dd")}"; //The link for Daniels API
+            string c_content = _client.GetStringAsync(UrlCDate).Result; //Sends a GET request to the specified Uri and returns the response body as a string in an synchronous operation
 
-            if (!content.Contains("message"))
+            if (!c_content.Contains("message"))
             {
-                List<Courses> courses = JsonConvert.DeserializeObject<List<Courses>>(content); //Deserializes or converts JSON String into a collection of Courses
-                return new ObservableCollection<Courses>(courses); //Converting the List to ObservalbleCollection of Courses
+                List<Courses> courses = JsonConvert.DeserializeObject<List<Courses>>(c_content); //Deserializes or converts JSON String into a collection of Courses
+                return _courses = new ObservableCollection<Courses>(courses); //Converting the List to ObservalbleCollection of Courses
             }
             else
             {
-                return new ObservableCollection<Courses>();
+                return _courses = new ObservableCollection<Courses>();
             }
         }
 
-        private async void OnDelete(object sender, EventArgs e)
+        private async void CDelete(object sender, EventArgs e)
         {
-            Deadlines _deadlines = deadlines[0]; //Assigning the first Post object of the Post Collection to a new instance of Post
-            await _client.DeleteAsync(UrlDL + "/" + _deadlines.id); //Send a DELETE request to the specified Uri as an asynchronous 
-            deadlines.Remove(_deadlines); //Removes the first occurrence of a specific object from the Post collection. This will be visible on the UI instantly
+            _client.DefaultRequestHeaders.Add("Authorization", "Bearer DuXsgXNtNyiOZrji1IpTD0rc2XKVOduDDW27ARzd5Pfb7azo7CwELPN9wxbN");
+            Courses courses = _courses[0]; //Assigning the first course object of the course Collection to a new instance of courses
+            await _client.DeleteAsync(UrlC + "/" + courses.id); //Send a DELETE request to the specified Uri as an asynchronous 
+            _courses.Remove(courses); //Removes the first occurrence of a specific object from the courses collection. This will be visible on the UI instantly
         }
 
         BoxView outerBox;
@@ -67,7 +69,7 @@ namespace DanRevi
         Label labelYear;
         ListView LV_Deadlines;
         ListView LV_Courses;
-        Button Delete_Deadline;
+        Button Delete_Courses;
 
 
         public SelectedDate (DateTimeEventArgs e)
@@ -87,8 +89,9 @@ namespace DanRevi
             labelDay = new Label {Text = e.DateTime.Day + ".", FontSize = 24 };
             labelMonth = new Label { Text = wholeDate.ToString("MMMM"), FontSize = 11 };
             labelYear = new Label { Text = e.DateTime.Year.ToString(), FontSize = 6 };
-            Delete_Deadline = new Button { Text = "Delete"};
-            Delete_Deadline.Clicked += OnDelete;
+            Delete_Courses = new Button { Text = "Slet kursus"};
+            Delete_Courses.Clicked += CDelete;
+           
 
             //------------ListView--------------------------
 
@@ -154,6 +157,16 @@ namespace DanRevi
                 WidthRequest = 400
             };
             //------------------ListView-------------------
+
+            if (_courses.Count > 0)
+            {
+                Delete_Courses.IsEnabled = true;
+            }
+            else
+            {
+                Delete_Courses.IsEnabled = false;
+            }
+
 
             dateLayout.Children.Add(outerBox, Constraint.RelativeToParent((parent) => {
                 return parent.X + 90;
@@ -254,7 +267,7 @@ namespace DanRevi
 
             listLayout.Children.Add(LV_Deadlines);
             listLayout.Children.Add(LV_Courses);
-            listLayout.Children.Add(Delete_Deadline);
+            listLayout.Children.Add(Delete_Courses);
 
             outerLayout.Children.Add(dateLayout, new Rectangle(0, 0, 1, 1), AbsoluteLayoutFlags.All);
             outerLayout.Children.Add(listLayout);
