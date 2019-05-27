@@ -62,6 +62,20 @@ namespace DanRevi
             _courses.Remove(courses); //Removes the first occurrence of a specific object from the courses collection. This will be visible on the UI instantly
         }
 
+        private async void OnAlertYesNoClicked(object sender, EventArgs e)
+        {
+            Courses courses = _courses[0];
+            bool answer = await DisplayAlert("Advarsel!", "Vil du gerne slette " + courses.name + "?", "Ja", "Nej");
+            if (answer == true)
+            {
+                CDelete(null, null);
+            }
+            else
+            {
+                return;
+            }
+        }
+
         BoxView outerBox;
         BoxView innerBox;
         Label labelDay;
@@ -90,7 +104,7 @@ namespace DanRevi
             labelMonth = new Label { Text = wholeDate.ToString("MMMM"), FontSize = 11 };
             labelYear = new Label { Text = e.DateTime.Year.ToString(), FontSize = 6 };
             Delete_Courses = new Button { Text = "Slet kursus"};
-            Delete_Courses.Clicked += CDelete;
+            Delete_Courses.Clicked += OnAlertYesNoClicked;
            
 
             //------------ListView--------------------------
