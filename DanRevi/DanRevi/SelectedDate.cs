@@ -90,7 +90,7 @@ namespace DanRevi
 		{
             AbsoluteLayout outerLayout = new AbsoluteLayout();
             RelativeLayout dateLayout = new RelativeLayout();
-            StackLayout listLayout = new StackLayout();
+            //StackLayout listLayout = new StackLayout();
 
             //content = new stacklayout {
             //	children = { new label {
@@ -238,29 +238,43 @@ namespace DanRevi
             //})
             );
 
-            //dateLayout.Children.Add(LV_Deadlines, Constraint.RelativeToParent((parent) =>
-            //{
-            //    return parent.X + 10;
-            //}), Constraint.RelativeToParent((parent) =>
-            //{
-            //    return parent.Y + 100;
-            //}), Constraint.RelativeToParent((parent) =>
-            //{
-            //    return (parent.Width * .9);
-            //}), Constraint.RelativeToParent((parent) =>
-            //{
-            //    return (parent.Height * .5);
-            //}));
+            dateLayout.Children.Add(LV_Deadlines, Constraint.RelativeToParent((parent) =>
+            {
+                return parent.X + 10;
+            }), Constraint.RelativeToParent((parent) =>
+            {
+                return parent.Y + 125;
+                //}), Constraint.RelativeToParent((parent) =>
+                //{
+                //    return (parent.Width * .9);
+                //}), Constraint.RelativeToParent((parent) =>
+                //{
+                //    return (parent.Height * .5);
+            }));
 
-            //dateLayout.Children.Add(LV_Courses, Constraint.RelativeToView(LV_Deadlines, (parent, sibling) => {
-            //    return sibling.X + 5;
-            //}), Constraint.RelativeToView(LV_Deadlines, (parent, sibling) => {
-            //    return sibling.Y + 50;
-            //}), Constraint.RelativeToParent((parent) => {
-            //    return (parent.Width * .9);
-            //}), Constraint.RelativeToParent((parent) => {
-            //    return (parent.Height * .5);
-            //}));
+            dateLayout.Children.Add(LV_Courses, Constraint.RelativeToView(LV_Deadlines, (parent, sibling) =>
+            {
+                return sibling.X + 0;
+            }), Constraint.RelativeToView(LV_Deadlines, (parent, sibling) =>
+            {
+                return sibling.Y + 100;
+                //}), Constraint.RelativeToParent((parent) => {
+                //    return (parent.Width * .9);
+                //}), Constraint.RelativeToParent((parent) => {
+                //    return (parent.Height * .5);
+            }));
+
+            dateLayout.Children.Add(Delete_Courses, Constraint.RelativeToView(LV_Courses, (parent, sibling) =>
+            {
+                return sibling.X + 0;
+            }), Constraint.RelativeToView(LV_Courses, (parent, sibling) =>
+            {
+                return sibling.Y + 100;
+                //}), Constraint.RelativeToParent((parent) => {
+                //    return (parent.Width * .9);
+                //}), Constraint.RelativeToParent((parent) => {
+                //    return (parent.Height * .5);
+            }));
 
 
             //flyt begge list views ned hvor jeg tilføjer dem til stacklayoutet. Defter skal jeg placere dem i disse if statements.
@@ -271,20 +285,20 @@ namespace DanRevi
             //}
             //if (GetDeadlinesByDate(e.DateTime).Count != 0)
             //{
-                
-                
+
+
             //}
             //else
             //{
             //    listLayout.Children.Add(new Label { Text = "No deadlines" });
             //        }
 
-            listLayout.Children.Add(LV_Deadlines);
-            listLayout.Children.Add(LV_Courses);
-            listLayout.Children.Add(Delete_Courses);
+            //listLayout.Children.Add(LV_Deadlines);
+            //listLayout.Children.Add(LV_Courses);
+            //listLayout.Children.Add(Delete_Courses);
 
             outerLayout.Children.Add(dateLayout, new Rectangle(0, 0, 1, 1), AbsoluteLayoutFlags.All);
-            outerLayout.Children.Add(listLayout);
+            //outerLayout.Children.Add(listLayout);
 
             this.Content = outerLayout;
         }
